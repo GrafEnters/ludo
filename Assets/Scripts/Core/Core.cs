@@ -66,7 +66,7 @@ public class Core {
             return false;
         }
 
-        if (from + throwRes > CELLS) {
+        if (from + throwRes >= CELLS) {
             return false;
         }
 

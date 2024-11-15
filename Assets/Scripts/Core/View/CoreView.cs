@@ -43,7 +43,7 @@ public class CoreView : MonoBehaviour {
     }
 
     public void ThrowDice() {
-        int res = Random.Range(0, 7);
+        int res = Random.Range(1, 7);
         _diceValue.text = res.ToString();
         OnPlayerThrowDice?.Invoke(res);
     }

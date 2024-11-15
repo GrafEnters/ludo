@@ -31,11 +31,14 @@ public class PawnView : MonoBehaviour {
     }
 
     public IEnumerator MoveToPos(Vector3 pos) {
+        Vector3 starPos = transform.position;
         float time = 0;
-        float maxTime = 0.5f;
+        float maxTime = 0.3f;
         while (time < maxTime) {
             time += Time.deltaTime;
-            transform.position = Vector3.Lerp(transform.position, pos, time / maxTime);
+            float percent = Mathf.Sin(MathF.PI * time / maxTime);
+            Vector3 targetPos = pos + Vector3.up * 30 * percent;
+            transform.position = Vector3.Lerp(starPos, targetPos, time / maxTime);
             yield return new WaitForEndOfFrame();
         }
 
@@ -58,8 +61,8 @@ public class PawnView : MonoBehaviour {
 }
 
 public enum TeamColor {
-    Blue = 0,
+    Green = 0,
+    Blue,
     Red,
-    Green,
     Yellow
 }
