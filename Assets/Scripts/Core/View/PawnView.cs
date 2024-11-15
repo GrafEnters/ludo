@@ -1,7 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class PawnView : MonoBehaviour {
     [SerializeField]
@@ -10,11 +11,16 @@ public class PawnView : MonoBehaviour {
     [SerializeField]
     private Image _coloredCenter;
 
-    private void Start() {
-        InitData((TeamColor)Random.Range(0,4));
-    }
+    [SerializeField]
+    private Button _selectButton;
 
-    private void InitData(TeamColor teamColor) {
+    public int Cell;
+    public int OwnerIndex;
+    public int PawnIndex;
+
+    public Action<int, int> OnPawnSelected;
+
+    public void InitColor(TeamColor teamColor) {
         Dictionary<TeamColor, Color> colorsD = new() {
             { TeamColor.Blue, _blue },
             { TeamColor.Red, _red },
@@ -22,6 +28,32 @@ public class PawnView : MonoBehaviour {
             { TeamColor.Yellow, _yellow }
         };
         _coloredCenter.color = colorsD[teamColor];
+    }
+
+    public IEnumerator MoveToPos(Vector3 pos) {
+        float time = 0;
+        float maxTime = 0.5f;
+        while (time < maxTime) {
+            time += Time.deltaTime;
+            transform.position = Vector3.Lerp(transform.position, pos, time / maxTime);
+            yield return new WaitForEndOfFrame();
+        }
+
+        transform.position = pos;
+    }
+
+    public void OnClicked() {
+        Debug.Log($"clicked on pawn: [{OwnerIndex},{PawnIndex}] ");
+    }
+
+    public void OnSelect() {
+        Debug.Log($"selected pawn: [{OwnerIndex},{PawnIndex}] ");
+        OnPawnSelected?.Invoke(OwnerIndex, PawnIndex);
+    }
+
+    public void ChangeSelectable(bool isSelectable) {
+        _selectButton.interactable = isSelectable;
+        _selectButton.gameObject.SetActive(isSelectable);
     }
 }
 
