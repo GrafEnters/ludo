@@ -15,7 +15,9 @@ public class CoreController {
 
     public void StartCore() {
         _core = new Core();
-        _core.SetUpModel(_hardcodePlayers);
+        _view.FieldViewController.PrecalculatePaths();
+        
+        _core.SetUpModel(_hardcodePlayers, _view.FieldViewController.GetPathLength);
         _view.PawnsViewController.CreatePawns(_core.PlayersAmount, _core.PawnsPerPlayer, OnPawnClicked);
     }
 
@@ -33,6 +35,7 @@ public class CoreController {
         if (owner != 0) {
             return;
         }
+
         _view.PawnsViewController.ClearPawnsInteractive();
         MoveSelectedPawn(index);
     }

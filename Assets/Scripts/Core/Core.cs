@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 
 public class Core {
-    private const int CELLS = 20;
+    private int _pathLength = 20;
     private CoreModel _model;
     public int PlayersAmount => _model.CorePlayerModels.Length;
     public int PawnsPerPlayer => _model.CorePlayerModels[0].Pawns.Length;
 
-    public void SetUpModel(string[] players) {
+    public void SetUpModel(string[] players, int pathLength) {
+        _pathLength = pathLength;
         _model = new CoreModel();
         _model.CorePlayerModels = new CorePlayerModel[players.Length];
-        _model.CoreFieldModel = new CoreFieldModel(CELLS, players.Length);
+        _model.CoreFieldModel = new CoreFieldModel(_pathLength, players.Length);
         for (int i = 0; i < _model.CorePlayerModels.Length; i++) {
             _model.CorePlayerModels[i] = new CorePlayerModel(players[i]);
             _model.CoreFieldModel.Cells[0, i] = _model.CorePlayerModels[i].Pawns.Length;
@@ -66,7 +67,7 @@ public class Core {
             return false;
         }
 
-        if (from + throwRes >= CELLS) {
+        if (from + throwRes >= _pathLength) {
             return false;
         }
 

@@ -15,6 +15,11 @@ public class CoreView : MonoBehaviour {
 
     public PawnsViewController PawnsViewController => _pawnsViewController;
 
+    [SerializeField]
+    private FieldViewController _fieldViewController;
+
+    public FieldViewController FieldViewController => _fieldViewController;
+
     private void Start() {
         CoreController coreController = new CoreController();
         coreController.Subscribe(this);
@@ -51,6 +56,4 @@ public class CoreView : MonoBehaviour {
     public void SelectPawnToMove(int pawnIndex) {
         OnPlayerSelectPawnToMove?.Invoke(pawnIndex);
     }
-
-    public void EnablePawnsInteractive() { }
 }

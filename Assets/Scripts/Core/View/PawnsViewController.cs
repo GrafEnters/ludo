@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PawnsViewController: MonoBehaviour {
-
+public class PawnsViewController : MonoBehaviour {
     [SerializeField]
     private Transform _pawnsHolder;
 
@@ -12,13 +11,17 @@ public class PawnsViewController: MonoBehaviour {
     private PawnView _pawnPrefab;
 
     [SerializeField]
+    private FieldViewController _fieldViewController;
+
+    [SerializeField]
     private CellsList _cells;
+
     [SerializeField]
     private CellsList[] _startingCells;
 
     private List<PawnView>[] _playersPawns;
-    
-    public void CreatePawns(int playersAmount, int pawnsAmount, Action<int,int> onPawnClicked) {
+
+    public void CreatePawns(int playersAmount, int pawnsAmount, Action<int, int> onPawnClicked) {
         _playersPawns = new List<PawnView>[playersAmount];
         for (int i = 0; i < playersAmount; i++) {
             _playersPawns[i] = new List<PawnView>();
@@ -38,26 +41,26 @@ public class PawnsViewController: MonoBehaviour {
     public void MovePawn(int playerOwner, int pawnIndex, int steps) {
         StartCoroutine(MovePawnCoroutine(playerOwner, pawnIndex, steps));
     }
-    
+
     private IEnumerator MovePawnCoroutine(int playerOwner, int pawnIndex, int steps) {
         for (int i = 0; i < steps; i++) {
             yield return StartCoroutine(MovePawnOneStep(playerOwner, pawnIndex));
         }
-    } 
+    }
 
     private IEnumerator MovePawnOneStep(int playerOwner, int pawnIndex) {
         PawnView p = _playersPawns[playerOwner][pawnIndex];
         p.Cell++;
-        Vector3 targetPos =  GetPosForCell(p.Cell);
+        Vector3 targetPos = GetPosForCell(playerOwner, p.Cell);
         yield return StartCoroutine(p.MoveToPos(targetPos));
     }
 
-    private Vector3 GetPosForCell(int cell) {
-        return _cells.Cells[cell-1].position;
+    private Vector3 GetPosForCell(int playerIndex, int cell) {
+        return _fieldViewController.GetPosForCell(playerIndex, cell);
     }
-    
+
     private Vector3 GetPosForStartingCell(int player, int pawnIndex) {
-        return _startingCells[player].Cells[pawnIndex].position;
+        return _fieldViewController.GetPosForStartingCell(player, pawnIndex);
     }
 
     public void SetPawnsInteractive(List<int> interactivePawns) {
